@@ -13,9 +13,7 @@ public class Tracklist {
 
     public void getTracklist(ArrayList<Track> playlist) {
         System.out.println("Full track list: ");
-        for (Track tracks : playlist) {
-            System.out.println(tracks);
-        }
+        playlist.forEach(System.out::println);
     }
 
     public void copyElementsOfTracklist (ArrayList<Track> fullPlaylist, ArrayList<Track> tracklistToCopy) {
@@ -28,40 +26,29 @@ public class Tracklist {
             tracklistToCopy.add(tracks);
         }
         System.out.println("Your tracklist: ");
-        for (Track tracks : tracklistToCopy) {
-            System.out.println(tracks);
-        }
+        tracklistToCopy.forEach(System.out::println);
     }
 
     public void getTracksTotalDuration(ArrayList<Track> tracklist) {
-        for (int i = 0; i < tracklist.size() ; i++) {
-            durationOfPlaylist += tracklist.get(i).getTrackDuration();
-        }
+        tracklist.forEach(track -> durationOfPlaylist += track.getTrackDuration());
         System.out.println("\nTracklist duration: " + durationOfPlaylist);
     }
 
     public void sortTracksByStyle(ArrayList<Track> tracklist) {
-        Collections.sort(tracklist, new Comparator<Track>() {
-            @Override
-            public int compare(Track o1, Track o2) {
-                return o1.getTrackStyle().compareTo(o2.getTrackStyle());
-            }
-        });
+        tracklist.sort((o1, o2) -> o1.getTrackStyle().compareTo(o2.getTrackStyle()));
         System.out.println("\nYor tracklist sorted by genre: ");
-        for (Track traks : tracklist) {
-            System.out.println(traks);
-        }
+        tracklist.forEach(System.out::println);
     }
 
     public void getTracksByRangeOfDuration (ArrayList<Track> tracklist) {
         System.out.println("\nPlease enter the tracks duration from A to B: ");
         System.out.println("Please enter A: " );
-        Double fromDuration = scanner.nextDouble();
+        double fromDuration = scanner.nextDouble();
         System.out.println("Please enter B: ");
-        Double toDuration = scanner.nextDouble();
-        for (int i = 0; i < tracklist.size(); i++) {
-            if (tracklist.get(i).getTrackDuration() >= fromDuration && tracklist.get(i).getTrackDuration() <= toDuration) {
-                System.out.println(tracklist.get(i));
+        double toDuration = scanner.nextDouble();
+        for (Track track : tracklist) {
+            if (track.getTrackDuration() >= fromDuration && track.getTrackDuration() <= toDuration) {
+                System.out.println(track);
             }
         }
     }

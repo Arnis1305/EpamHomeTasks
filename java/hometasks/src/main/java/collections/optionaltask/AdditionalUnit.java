@@ -39,15 +39,8 @@ public class AdditionalUnit {
         poem.add("And the fishes at sea.");
         poem.add("For I am a part of Mother Earth");
         poem.add("And it is a part of me. ");
-        Collections.sort(poem, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.length() - o2.length();
-            }
-        });
-        for (String poemString : poem) {
-            System.out.println(poemString);
-        }
+        poem.sort((o1, o2) -> o1.length() - o2.length());
+        poem.forEach(System.out::println);
     }
 
     private void getDirectoriesAndFilesOfFolder() {
@@ -63,8 +56,6 @@ public class AdditionalUnit {
                 }
             }
         }
-        for (String directoryOrFileName : directoriesAndFiles) {
-            System.out.println(directoryOrFileName);
-        }
+        directoriesAndFiles.forEach(System.out::println);
     }
 }

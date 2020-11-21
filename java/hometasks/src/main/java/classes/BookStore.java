@@ -18,19 +18,14 @@ public class BookStore {
 
     ArrayList<Book> getAuthorsListByAlphabet() {
         ArrayList<Book> authorsList = new ArrayList<>(booksList);
-        Collections.sort(authorsList, new Comparator<Book>() {
-            @Override
-            public int compare(Book o1, Book o2) {
-                return o1.getBookAuthor().compareToIgnoreCase(o2.getBookAuthor());
-            }
-        });
+        authorsList.sort((o1, o2) -> o1.getBookAuthor().compareToIgnoreCase(o2.getBookAuthor()));
         return authorsList;
     }
 
     ArrayList<Book> getListByAuthorName(String authorName) {
         ArrayList<Book> list = new ArrayList<>();
         for (Book books : booksList) {
-            if((books.getBookAuthor()).equalsIgnoreCase(authorName)) {
+            if ((books.getBookAuthor()).equalsIgnoreCase(authorName)) {
                 list.add(books);
             }
         }

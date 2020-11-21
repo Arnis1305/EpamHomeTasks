@@ -17,29 +17,21 @@ public class BookMain {
 
         System.out.println("Sorted list by author name: ");
         ArrayList<Book> listName = ozBy.getAuthorsListByAlphabet();
-        for (Book books : listName) {
-            System.out.println(books);
-        }
+        listName.forEach(System.out::println);
 
         System.out.println("\nEnter author name: ");
         String authorName = scanner.nextLine();
         ArrayList<Book> listOfBooksByAuthorName = ozBy.getListByAuthorName(authorName);
-        for (Book books : listOfBooksByAuthorName) {
-            System.out.println(books);
-        }
+        listOfBooksByAuthorName.forEach(System.out::println);
 
         System.out.println("\nEnter book publisher: ");
         String publisherName = scanner.nextLine();
         ArrayList<Book> listOfBooksByPublisher = ozBy.getListByPublisher(publisherName);
-        for (Book books : listOfBooksByPublisher) {
-            System.out.println(books);
-        }
+        listOfBooksByPublisher.forEach(System.out::println);
 
         System.out.println("\nList of books published after this year: ");
         short yearOfPublish = scanner.nextShort();
         ArrayList<Book> listOfBooksByYears = ozBy.getListOfBooksAfterThisYear(yearOfPublish);
-        for (Book books : listOfBooksByYears) {
-            System.out.println(books);
-        }
+        listOfBooksByYears.forEach(System.out::println);
     }
 }
