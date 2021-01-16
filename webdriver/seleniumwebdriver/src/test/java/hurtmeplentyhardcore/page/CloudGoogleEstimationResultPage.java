@@ -47,6 +47,7 @@ public class CloudGoogleEstimationResultPage {
 
     public TenMinuteMailPage emailEstimate() {
         emailEstimateButton.click();
+        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(emailEstimateInput));
         return new TenMinuteMailPage(driver);
     }
 
