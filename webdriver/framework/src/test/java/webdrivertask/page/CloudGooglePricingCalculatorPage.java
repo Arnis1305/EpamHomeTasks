@@ -1,5 +1,6 @@
 package webdrivertask.page;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,6 +8,8 @@ import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import webdrivertask.model.ComputeEngine;
+import webdrivertask.service.ComputeEngineCreator;
 
 import java.util.List;
 
@@ -19,14 +22,8 @@ public class CloudGooglePricingCalculatorPage {
     @FindBy(xpath = "//md-select[@placeholder='Series']")
     WebElement machineSeriesDropDownList;
 
-    @FindBy(xpath = "//md-option[@value='n1']")
-    WebElement seriesOptionNOne;
-
     @FindBy(xpath = "//md-select[@placeholder='Instance type']")
     WebElement machineTypeDropDownList;
-
-    @FindBy(xpath = "//md-option[@value='CP-COMPUTEENGINE-VMIMAGE-N1-STANDARD-8']")
-    WebElement machineTypeNOneStandardEight;
 
     @FindBy(xpath = "//md-checkbox[@ng-model='listingCtrl.computeServer.addGPUs']")
     WebElement checkboxAddGpu;
@@ -34,32 +31,17 @@ public class CloudGooglePricingCalculatorPage {
     @FindBy(xpath = "//md-select[@ng-model='listingCtrl.computeServer.gpuCount']")
     WebElement numberOfGPUDropDownList;
 
-    @FindBy(xpath = "/html/body/div[5]/md-select-menu/md-content/md-option[2]")
-    WebElement numberOfGPUEqualsOne;
-
     @FindBy(xpath = "//md-select[@placeholder='GPU type']")
     WebElement gpuTypeDropDownList;
-
-    @FindBy(xpath = "//md-option[@value='NVIDIA_TESLA_V100']")
-    WebElement gpuTypeNvidiaTeslaVHundred;
 
     @FindBy(xpath = "/html/body/md-content/md-card/div/md-card-content[1]/div[2]/div/md-card/md-card-content/div/div[1]/form/div[10]/div[1]/md-input-container/md-select")
     WebElement localSSDDropDownList;
 
-    @FindBy(xpath = "/html/body/div[7]/md-select-menu/md-content/md-option[3]")
-    WebElement localSSDAmountTwo;
-
     @FindBy(xpath = "/html/body/md-content/md-card/div/md-card-content[1]/div[2]/div/md-card/md-card-content/div/div[1]/form/div[11]/div[1]/md-input-container/md-select")
     WebElement datacenterLocationDropDownList;
 
-    @FindBys({@FindBy(xpath = "//md-option[@value='europe-west3']")})
-    List<WebElement> datacenterLocationFrankfurt;
-
     @FindBy(xpath = "/html/body/md-content/md-card/div/md-card-content[1]/div[2]/div/md-card/md-card-content/div/div[1]/form/div[14]/div[1]/md-input-container/md-select")
     WebElement committedUsageDropDownList;
-
-    @FindBy(xpath = "/html/body/div[9]/md-select-menu/md-content/md-option[2]")
-    WebElement committedUsageOneYear;
 
     @FindBy(xpath = "//button[@class='md-raised md-primary cpc-button md-button md-ink-ripple'][@ng-click='listingCtrl.addComputeServer(ComputeEngineForm);']")
     WebElement addToEstimateButton;
@@ -70,22 +52,30 @@ public class CloudGooglePricingCalculatorPage {
     }
 
     public CloudGoogleEstimationResultPage createEstimate() {
-        numberOfInstance.sendKeys("4");
+        ComputeEngine computeEngine = ComputeEngineCreator.withCpuGpuAndSsd();
+        numberOfInstance.sendKeys(computeEngine.getNumberOfInstances());
         machineSeriesDropDownList.click();
-        waitThenClick(driver, seriesOptionNOne);
+        List<WebElement> machineSeries = driver.findElements(By.xpath("//md-option//div[@class='md-text ng-binding'][contains(text(), '" + computeEngine.getMachineSeries()+ "')]"));
+        waitThenClick(driver, machineSeries.get(0));
         machineTypeDropDownList.click();
-        waitThenClick(driver, machineTypeNOneStandardEight);
+        List<WebElement> machineType = driver.findElements(By.xpath("//md-option//div[@class='md-text ng-binding'][contains(text(), '" + computeEngine.getMachineType() +"')]"));
+        waitThenClick(driver, machineType.get(0));
         waitThenClick(driver, checkboxAddGpu);
         waitThenClick(driver, numberOfGPUDropDownList);
-        waitThenClick(driver, numberOfGPUEqualsOne);
+        WebElement numberOfGpu = driver.findElement(By.xpath("//div[@id='select_container_395']//md-content//md-option//div[@class='md-text ng-binding'][contains(text(), '" + computeEngine.getNumberOfGpu() + "')]"));
+        waitThenClick(driver, numberOfGpu);
         gpuTypeDropDownList.click();
-        waitThenClick(driver, gpuTypeNvidiaTeslaVHundred);
+        WebElement gpuType = driver.findElement(By.xpath("//div[@id='select_container_397']//md-select-menu//md-content//md-option//div[@class='md-text ng-binding'][contains(text(), '" + computeEngine.getGpuType() + "')]"));
+        waitThenClick(driver, gpuType);
         localSSDDropDownList.click();
-        waitThenClick(driver, localSSDAmountTwo);
+        WebElement localSsd = driver.findElement(By.xpath("//div[@id='select_container_356']//md-select-menu//md-content//md-option//div[@class='md-text ng-binding'][contains(text(), '" + computeEngine.getLocalSsd() + "')]"));
+        waitThenClick(driver, localSsd);
         datacenterLocationDropDownList.click();
-        waitThenClick(driver, datacenterLocationFrankfurt.get(2));
+        WebElement datacenterLocation = driver.findElement(By.xpath("//div[@id='select_container_93']//md-select-menu//md-content//md-option//div[@class='md-text ng-binding'][contains(text(), '" + computeEngine.getDatacenterLocation() + "')]"));
+        waitThenClick(driver, datacenterLocation);
         committedUsageDropDownList.click();
-        waitThenClick(driver, committedUsageOneYear);
+        WebElement committedUsage = driver.findElement(By.xpath("//div[@id='select_container_100']//md-select-menu//md-content//md-option//div[@class='md-text'][contains(text(), '" + computeEngine.getCommittedUsage() + "')]"));
+        waitThenClick(driver, committedUsage);
         addToEstimateButton.click();
         return new CloudGoogleEstimationResultPage(driver);
     }

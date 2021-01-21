@@ -20,7 +20,7 @@ public class TenMinuteMailPage {
     @FindBy(xpath = "//span[@title='Google Cloud Sales ']")
     WebElement inboxSender;
 
-    @FindBy(xpath = "//*[@id='tm-body']/main/div[1]/div/div[3]/div[2]/div/div[1]/div/div[2]/div[3]/div/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/h3")
+    @FindBy(xpath = "//*[@id='tm-body']//td[2]//h3")
     WebElement estimatedMonthlyCoast;
 
     public TenMinuteMailPage(WebDriver driver) {
