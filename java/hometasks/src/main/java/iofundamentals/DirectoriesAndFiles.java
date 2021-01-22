@@ -1,29 +1,25 @@
 package iofundamentals;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Scanner;
 
 public class DirectoriesAndFiles {
     static String outputLine = "";
-    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Please enter directory to scan, example(D:/folder): ");
-        String userDirectory = scanner.next();
-        Path directoryPath = Paths.get(userDirectory);
-        CustomFileVisitor visitor = new CustomFileVisitor(directoryPath);
-        Files.walkFileTree(directoryPath, visitor);
-        PrintWriter writer = new PrintWriter("TreeOfTheDirectory.txt", "UTF-8");
-        writer.println(outputLine);
-        writer.close();
-        System.out.println(outputLine);
-        System.out.println("Amount of directories: " + visitor.amountOfDirectories);
-        System.out.println("Amount of files: " + visitor.amountOfFiles);
-        System.out.println("Average amount of files in directories: " + visitor.amountOfFiles / visitor.amountOfDirectories);
-        System.out.println("Average length of the files names: " + visitor.lengthOfTheFileName / visitor.amountOfFiles);
+        String userDirectoryOrFile = args[0];
+        if (userDirectoryOrFile.contains(".txt")) {
+            readFromTextFile(userDirectoryOrFile);
+        } else {
+            Path directoryPath = Paths.get(userDirectoryOrFile);
+            CustomFileVisitor visitor = new CustomFileVisitor(directoryPath);
+            Files.walkFileTree(directoryPath, visitor);
+            PrintWriter writer = new PrintWriter("TreeOfTheDirectory.txt", "UTF-8");
+            System.out.println("Your file is done with name: TreeOfTheDirectory.txt");
+            writer.println(outputLine);
+            writer.close();
+        }
     }
 
     private static class CustomFileVisitor extends SimpleFileVisitor<Path> {
@@ -42,7 +38,7 @@ public class DirectoriesAndFiles {
 
         @Override
         public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-            outputLine = outputLine + PREFIX + setFileIndentation(levelFileOrDirectory) + FILE_PREFIX + path.getFileName() + " (" + (Files.size(path)/1024) + " kB)" + "\n";
+            outputLine = outputLine + PREFIX + setFileIndentation(levelFileOrDirectory) + FILE_PREFIX + path.getFileName() + "\n";
             lengthOfTheFileName += path.getFileName().toString().length();
             amountOfFiles ++;
             return FileVisitResult.CONTINUE;
@@ -77,5 +73,32 @@ public class DirectoriesAndFiles {
             }
             return outputIndent;
         }
+    }
+
+    private static void readFromTextFile(String path) throws IOException {
+        double amountOfFilesInTextFile = 0;
+        double amountOfDirectoriesInTextFile = 0;
+        double fileNameLength = 0;
+        String delimiters = "[| ]+";
+        String textLine;
+        File file = new File(path);
+        FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        while ((textLine = bufferedReader.readLine()) != null) {
+            if (textLine.contains("| ")) {
+                String[] tokens = textLine.split(delimiters);
+                for (int i = 0; i < tokens.length; i++) {
+                    fileNameLength +=(tokens[i].length());
+                }
+                amountOfFilesInTextFile ++;
+            } else if (textLine.contains("|-")) {
+                amountOfDirectoriesInTextFile ++;
+            }
+            System.out.println(textLine);
+        }
+        System.out.println("Amount of files: " + amountOfFilesInTextFile);
+        System.out.println("Amount of directories: " + amountOfDirectoriesInTextFile);
+        System.out.println("Average amount of files in directories: " + (amountOfFilesInTextFile / amountOfDirectoriesInTextFile));
+        System.out.println("Average length of the files names: " + fileNameLength / amountOfFilesInTextFile);
     }
 }
